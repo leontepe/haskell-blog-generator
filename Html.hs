@@ -17,7 +17,13 @@ h1_ :: String -> Structure
 h1_ = Structure . el "h1" . escape
 
 html_ :: String -> Structure -> Html
-html_ title content = Html (el "html" (el "head" (el "title" (escape title)) <> el "body" (getStructureString content)))
+html_ title content = Html
+  (el "html"
+    (el "head"
+      ((el "title" . escape) title)
+      <>
+      (el "body" . getStructureString) content)
+  )
 
 el :: String -> String -> String
 el tag content = "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
@@ -46,4 +52,4 @@ escape =
         '\'' -> "&#39;"
         _ -> [c]
   in
-    concat . map escapeChar
+    concatMap escapeChar
