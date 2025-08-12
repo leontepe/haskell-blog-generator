@@ -1,48 +1,15 @@
 {-# LANGUAGE LambdaCase #-}
 
-module Convert where
+module HsBlog
+  ( main
+  , process
+  )
+  where
 
-import qualified Markup
-import qualified Html
+import HsBlog.Convert (process)
 
 import System.Directory (doesFileExist)
 import System.Environment (getArgs)
-import Control.Monad (when)
-
-convert :: Html.Title -> Markup.Document -> Html.Html
--- don't quite understand what foldMap is doing here
-convert title = Html.html_ title . foldMap convertStructure
-
-convertStructure :: Markup.Structure -> Html.Structure
-convertStructure structure =
-  case structure of
-    Markup.Heading n txt ->
-      Html.h_ n txt
-
-    Markup.Paragraph p ->
-      Html.p_ p
-
-    Markup.UnorderedList list ->
-      Html.ul_ $ map Html.p_ list
-
-    Markup.OrderedList list ->
-      Html.ol_ $ map Html.p_ list
-
-    Markup.CodeBlock list ->
-      Html.code_ (unlines list)
-
--- getArgs :: IO [String] -- Get the program arguments
-
--- getContents :: IO String -- Read all of the content from stdin
-
--- readFile :: FilePath -> IO String -- Read all of the content from a file
-
--- writeFile :: FilePath -> String -> IO () -- Write a string into a file
-
--- doesFileExist :: FilePath -> IO Bool -- Checks whether a file exists
-
-process :: Html.Title -> String -> String
-process title = Html.render . convert title . Markup.parse
 
 yesNoString :: Maybe Bool -> String
 yesNoString defaultValue =
@@ -70,11 +37,6 @@ ask question defaultValue = do
         Nothing -> do
           putStrLn "Invalid response. Type 'y' for yes, 'n' for no."
           ask question defaultValue
-
-whenIO :: IO Bool -> IO () -> IO ()
-whenIO conditionTask action = do
-  condition <- conditionTask
-  when condition action
 
 main :: IO ()
 main = getArgs >>= \case

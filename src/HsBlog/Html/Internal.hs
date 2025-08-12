@@ -1,4 +1,4 @@
-module Html.Internal where
+module HsBlog.Html.Internal where
 
 import Numeric.Natural
 
@@ -36,6 +36,7 @@ el tag content = "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
 getStructureString :: Structure -> String
 getStructureString (Structure string) = string
 
+render :: Html -> String
 render (Html html) = html
 
 escape :: String -> String
