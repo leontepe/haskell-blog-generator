@@ -4,27 +4,30 @@ import Numeric.Natural
 
 -- types
 
-newtype Html =
-  Html String
+newtype Html
+  = Html String
 
-newtype Structure =
-  Structure String
+newtype Structure
+  = Structure String
 
-newtype Content =
-  Content String
+newtype Content
+  = Content String
 
 type Title = String
 
 -- edsl
 
 html_ :: Title -> Structure -> Html
-html_ title content = Html
-  (el "html"
-    (el "head"
-      ((el "title" . escape) title)
-      <>
-      (el "body" . getStructureString) content)
-  )
+html_ title content =
+  Html
+    ( el
+        "html"
+        ( el
+            "head"
+            ((el "title" . escape) title)
+            <> (el "body" . getStructureString) content
+        )
+    )
 
 -- structure
 
@@ -55,7 +58,7 @@ txt_ :: String -> Content
 txt_ = Content . escape
 
 link_ :: FilePath -> Content -> Content
-link_ path content = 
+link_ path content =
   Content $
     elAttr
       "a"
@@ -104,14 +107,12 @@ getContentString (Content string) = string
 
 escape :: String -> String
 escape =
-  let
-    escapeChar c =
-      case c of
-        '<' -> "&lt;"
-        '>' -> "&gt;"
-        '&' -> "&amp;"
-        '"' -> "&quot;"
-        '\'' -> "&#39;"
-        _ -> [c]
-  in
-    concatMap escapeChar
+  let escapeChar c =
+        case c of
+          '<' -> "&lt;"
+          '>' -> "&gt;"
+          '&' -> "&amp;"
+          '"' -> "&quot;"
+          '\'' -> "&#39;"
+          _ -> [c]
+   in concatMap escapeChar
