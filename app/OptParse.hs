@@ -10,7 +10,7 @@ import Data.Maybe (fromMaybe)
 import Options.Applicative
 
 data Options
-  = ConvertSingle SingleInput SingleOutput
+  = ConvertSingle SingleInput SingleOutput Bool
   | ConvertDir FilePath FilePath
   deriving Show
 
@@ -60,7 +60,7 @@ pOptions =
 
 pConvertSingle :: Parser Options
 pConvertSingle =
-  ConvertSingle <$> pSingleInput <*> pSingleOutput
+  ConvertSingle <$> pSingleInput <*> pSingleOutput <*> pReplace
 
 pSingleInput :: Parser SingleInput
 pSingleInput =
@@ -69,6 +69,17 @@ pSingleInput =
 pSingleOutput :: Parser SingleOutput
 pSingleOutput =
   fromMaybe Stdout <$> optional pOutputFile
+
+pReplace :: Parser Bool
+pReplace =
+  fromMaybe False <$> optional
+    (
+      switch
+        ( long "replace"
+          <> short 'r'
+          <> help "If the output file already exists, replace it"
+        )
+    )
 
 pInputFile :: Parser SingleInput
 pInputFile = InputFile <$> parser

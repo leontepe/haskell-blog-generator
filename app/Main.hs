@@ -41,7 +41,7 @@ main = do
     ConvertDir input output ->
       HsBlog.convertDirectory input output
 
-    ConvertSingle input output -> do
+    ConvertSingle input output replace -> do
       (title, inputHandle) <-
         case input of
           Stdin ->
@@ -55,7 +55,7 @@ main = do
           OutputFile file -> do
             exists <- doesFileExist file
             shouldOpenFile <-
-              if exists
+              if exists && not replace
                 then ask "The output file already exists. Do you want to overwrite it?" (Just False)
                 else pure True
             if shouldOpenFile
