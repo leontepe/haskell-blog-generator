@@ -11,12 +11,12 @@ description:         This package provides a static blog generator
                      It is used as the example project in the online book
                      'Learn Haskell Blog Generator'. See the README for
                      more details.
-homepage:            https://github.com/soupi/learn-haskell-blog-generator
-bug-reports:         https://github.com/soupi/learn-haskell-blog-generator/issues
+homepage:            https://github.com/leontepe/haskell-blog-generator
+bug-reports:         https://github.com/leontepe/haskell-blog-generator/issues
 license:             BSD-3-Clause
 license-file:        LICENSE.txt
-author:              Gil Mizrahi
-maintainer:          gilmi@posteo.net
+author:              Leon Tepe
+maintainer:          121405360+leontepe@users.noreply.github.com
 category:            Learning, Web
 extra-doc-files:
   README.md
