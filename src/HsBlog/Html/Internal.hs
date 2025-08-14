@@ -1,8 +1,9 @@
 module HsBlog.Html.Internal where
 
+import Prelude hiding (head)
 import Numeric.Natural
 
--- types
+-- * types
 
 newtype Html
   = Html String
@@ -12,22 +13,40 @@ newtype Structure
 
 newtype Content
   = Content String
+  
+newtype Head
+  = Head String
 
-type Title = String
+-- * edsl
 
--- edsl
-
-html_ :: Title -> Structure -> Html
-html_ title content =
+html_ :: Head -> Structure -> Html
+html_ (Head head) content =
   Html
-    ( el
-        "html"
-        ( el
-            "head"
-            ((el "title" . escape) title)
-            <> (el "body" . getStructureString) content
-        )
+    ( el "html"
+      ( el "head" head
+        <> (el "body" . getStructureString) content
+      )
     )
+    
+-- * head
+
+title_ :: String -> Head
+title_ = Head . el "title" . escape
+
+stylesheet_ :: FilePath -> Head
+stylesheet_ path =
+  Head $ "<link rel=\"stylesheet\" type=\"text/css\" href=\"" <> escape path <> "\">"
+  
+meta_ :: String -> String -> Head
+meta_ name content =
+  Head $ "<meta name=\"" <> escape name <> "\" content=\"" <> escape content <> "\">"
+  
+instance Semigroup Head where
+  (<>) (Head h1) (Head h2) =
+    Head (h1 <> h2)
+
+instance Monoid Head where
+  mempty = Head ""
 
 -- structure
 
@@ -107,12 +126,13 @@ getContentString (Content string) = string
 
 escape :: String -> String
 escape =
-  let escapeChar c =
-        case c of
-          '<' -> "&lt;"
-          '>' -> "&gt;"
-          '&' -> "&amp;"
-          '"' -> "&quot;"
-          '\'' -> "&#39;"
-          _ -> [c]
+  let
+    escapeChar c =
+      case c of
+        '<' -> "&lt;"
+        '>' -> "&gt;"
+        '&' -> "&amp;"
+        '"' -> "&quot;"
+        '\'' -> "&#39;"
+        _ -> [c]
    in concatMap escapeChar

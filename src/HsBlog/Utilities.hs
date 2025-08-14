@@ -1,5 +1,5 @@
 module HsBlog.Utilities
-  ( ask
+  ( askUser
   )
   where
 
@@ -10,8 +10,8 @@ yesNoString defaultValue =
     Just False -> " (y/N)"
     Nothing -> " (y/n)"
 
-ask :: String -> Maybe Bool -> IO Bool
-ask question defaultValue = do
+askUser :: String -> Maybe Bool -> IO Bool
+askUser question defaultValue = do
   putStrLn (question <> yesNoString defaultValue)
   answer <- getLine
   case answer of
@@ -24,8 +24,8 @@ ask question defaultValue = do
           "" -> pure bool
           _ -> do
             putStrLn "Invalid response. Type 'y' for yes, 'n' for no, or Enter to accept the default."
-            ask question defaultValue
+            askUser question defaultValue
         
         Nothing -> do
           putStrLn "Invalid response. Type 'y' for yes, 'n' for no."
-          ask question defaultValue
+          askUser question defaultValue

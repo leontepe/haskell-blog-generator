@@ -1,6 +1,6 @@
 module Main where
 
-import HsBlog.Utilities (ask)
+import HsBlog.Utilities (askUser)
 
 import OptParse
 import qualified HsBlog
@@ -13,8 +13,8 @@ main :: IO ()
 main = do
   options <- parse
   case options of
-    ConvertDir input output ->
-      HsBlog.convertDirectory input output
+    ConvertDir input output env ->
+      HsBlog.convertDirectory env input output
 
     ConvertSingle input output replace -> do
       (title, inputHandle) <-
@@ -31,7 +31,7 @@ main = do
             exists <- doesFileExist file
             shouldOpenFile <-
               if exists && not replace
-                then ask "The output file already exists. Do you want to overwrite it?" (Just False)
+                then askUser "The output file already exists. Do you want to overwrite it?" (Just False)
                 else pure True
             if shouldOpenFile
               then
